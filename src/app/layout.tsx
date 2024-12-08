@@ -1,10 +1,8 @@
 import "./globals.css";
-import { LucideKanban } from "lucide-react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { homePath, ticketsPath } from "@/path";
+import { Header } from "@/components/header";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,19 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className="flex justify-between py-2.5 px-5 border-b">
-          <div>
-            <Link href={homePath()} className={buttonVariants({ variant: "ghost" })}>
-              <LucideKanban />
-              <h1 className="text-lg font-semibold">TicketBounty</h1>
-            </Link>
-          </div>
-          <div>
-            <Link href={ticketsPath()} className={buttonVariants({ variant: "default" })}>
-              Tickets
-            </Link>
-          </div>
-        </nav>
+        <Header /> 
         <main className="py-24 px-8 min-h-screen flex-1 overflow-y-auto overflow-x-hidden bg-secondary/20 flex flex-col">
           {children}
         </main>
