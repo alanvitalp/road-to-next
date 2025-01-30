@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { Config } from "tailwindcss";
 
 export default {
@@ -6,6 +7,8 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/features/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/components/theme/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {
@@ -70,7 +73,7 @@ export default {
   		}
   	},
   	animation: {
-  		'fade-in-from-top': 'fade-in-from-top 0.5s ease-out'
+  		'fade-in-from-top': 'fade-in-from-top 0.5s ease-out',
   	}
   },
   plugins: [require("tailwindcss-animate")],
