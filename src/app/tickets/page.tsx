@@ -4,8 +4,8 @@ import { CardCompact } from "@/components/card-compact";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
-import { CreateTicketForm } from "@/features/ticket/components/create-ticket-form";
 import { TicketList } from "@/features/ticket/components/ticket-list";
+import { UpsertTicketForm } from "@/features/ticket/components/upsert-ticket-form";
 
 const TicketsPage = () => {
   return (
@@ -15,7 +15,7 @@ const TicketsPage = () => {
       <CardCompact 
         title="Create Ticket" 
         description="A new ticket will be created"
-        content={<CreateTicketForm />} 
+        content={<UpsertTicketForm />} 
         className="w-full max-w-[420px] self-center" 
        />
 
