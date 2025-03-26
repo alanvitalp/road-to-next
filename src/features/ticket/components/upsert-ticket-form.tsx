@@ -1,6 +1,9 @@
+"use client"
+
 import { Ticket } from "@prisma/client"
 import { Label } from "@radix-ui/react-label"
-import { Button } from "@/components/ui/button"
+import { useActionState } from "react"
+import { SubmitButton } from "@/components/form/submit-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { upsertTicket } from "../actions/upsert-ticket"
@@ -10,8 +13,15 @@ type UpsertTicketFormProps = {
 }
 
 const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
+  const [actionState, action] = useActionState(
+    upsertTicket.bind(null, ticket?.id), 
+    {
+      message: ""
+    }
+  )
+  
   return (
-    <form action={upsertTicket.bind(null, ticket?.id)} className="flex flex-col gap-y-2">
+    <form action={action} className="flex flex-col gap-y-2">
       <Input type="hidden" name="id" defaultValue={ticket?.id} />
 
       <Label htmlFor="title">Title</Label>
@@ -20,9 +30,9 @@ const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
       <Label htmlFor="content">Content</Label>
       <Textarea id="content" name="content" defaultValue={ticket?.content}/>
 
-      <Button type="submit">
-        { ticket?.id ? "Update" : "Create" }
-      </Button>
+      <SubmitButton label={ticket?.id ? "Update" : "Create"}/>
+
+      {actionState.message}
     </form>
   )
 }
