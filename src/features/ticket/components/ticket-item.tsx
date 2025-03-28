@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { editTicketPath, ticketPath } from "@/path";
+import { toCurrencyFromCent } from "@/utils/currency";
 import { deleteTicket } from "../actions/delete-ticket";
 import { TICKET_ICONS } from "../constants";
 
@@ -30,7 +32,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   const editButton = (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch href={editTicketPath(ticket.id)}>
-        <LucidePencil className="h-4 w-4" />
+        <LucidePencil className="w-4 h-4" />
       </Link>
     </Button>
   )
@@ -38,7 +40,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   const deleteButton = (
     <form action={deleteTicket.bind(null, ticket.id)}>
       <Button variant="outline" size="icon">
-        <LucideTrash className="h-4 w-4" />
+        <LucideTrash className="w-4 h-4" />
       </Button>
     </form>
   )
@@ -63,6 +65,11 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
             "line-through": ticket.status === "DONE",
           })}>{ticket.content}</p>
         </CardContent>
+
+        <CardFooter className="flex justify-between">
+          <p className="text-sm text-muted-foreground">{ticket.deadline}</p>
+          <p className="text-sm text-muted-foreground">{toCurrencyFromCent(ticket.bounty)}</p>
+        </CardFooter>
       </Card>
 
       <div className="flex flex-col gap-y-1">

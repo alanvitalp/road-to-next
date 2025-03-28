@@ -9,7 +9,7 @@ import { UpsertTicketForm } from "@/features/ticket/components/upsert-ticket-for
 
 const TicketsPage = () => {
   return (
-    <div className="flex-1 flex flex-col gap-y-8">
+    <div className="flex flex-col flex-1 gap-y-8">
       <Heading title={"Tickets"} description={"All your tickets at one place"}/>
     
       <CardCompact 
