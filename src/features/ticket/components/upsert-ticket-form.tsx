@@ -2,7 +2,7 @@
 
 import { Ticket } from "@prisma/client"
 import { Label } from "@radix-ui/react-label"
-import { useActionState } from "react"
+import { useActionState, useRef } from "react"
 import { DatePicker } from "@/components/date-picker"
 import { FieldError } from "@/components/form/field-error"
 import { Form } from "@/components/form/form"
@@ -22,8 +22,14 @@ const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
     upsertTicket.bind(null, ticket?.id), EMPTY_ACTION_STATE
   )
 
+  const datePickerImperativeHandleRef = useRef<{ reset: () => void }>(null);
+
+  const handleSuccess = () => {
+    datePickerImperativeHandleRef.current?.reset();
+  }
+
   return (
-    <Form action={action} actionState={actionState}>
+    <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
       <Input type="hidden" name="id" defaultValue={ticket?.id} />
 
       <Label htmlFor="title">Title</Label>
@@ -44,6 +50,7 @@ const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
               (actionState.payload?.get("deadline") as string) ??
               ticket?.deadline
             }
+            imperativeHandleRef={datePickerImperativeHandleRef}
           />
           <FieldError actionState={actionState} name="deadline" />
         </div>
