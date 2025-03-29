@@ -1,12 +1,14 @@
 "use client";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
 import { Ticket, TicketStatus } from "@prisma/client"
 import { LucideTrash } from "lucide-react"
 import React from "react"
 import { TICKET_STATUS_LABELS } from "../constants"
 import { updateTicketStatus } from "../actions/update-ticket-status"
 import { toast } from "sonner"
+import { deleteTicket } from "../actions/delete-ticket";
+import { useConfirmDialog } from "./confirm-dialog";
 
 type TicketMoreMenuProps = {
   ticket: Ticket
@@ -14,20 +16,15 @@ type TicketMoreMenuProps = {
 }
 
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
-  const deleteButton = (
-    <DropdownMenuItem>
-      <LucideTrash className="w-4 h-4 mr-2" />
-      Delete
-    </DropdownMenuItem>
-  )
-
-  const ticketStatusRadioGroupItems = (
-    (Object.keys(TICKET_STATUS_LABELS) as Array<TicketStatus>).map((label) => {
-      return (
-        <DropdownMenuRadioItem value={label} key={label}>{TICKET_STATUS_LABELS[label]}</DropdownMenuRadioItem>
-      )
-    })
-  )
+  const [deleteButton, deleteDialog] = useConfirmDialog({
+    action: deleteTicket.bind(null, ticket.id),
+    trigger: (
+      <DropdownMenuItem>
+        <LucideTrash className="w-4 h-4" />
+        <span>Delete</span>
+      </DropdownMenuItem>
+    ),
+  });
 
   const handleUpdateTicketStatus = async (value: string) => {
     const promise = updateTicketStatus(ticket?.id, value as TicketStatus);
@@ -45,18 +42,32 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
     }
   }
 
+  const ticketStatusRadioGroupItems = (
+    <DropdownMenuRadioGroup
+      value={ticket.status}
+      onValueChange={handleUpdateTicketStatus}
+    >
+      {(Object.keys(TICKET_STATUS_LABELS) as Array<TicketStatus>).map((key) => (
+        <DropdownMenuRadioItem key={key} value={key}>
+          {TICKET_STATUS_LABELS[key]}
+        </DropdownMenuRadioItem>
+      ))}
+    </DropdownMenuRadioGroup>
+  );
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        {trigger}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" side="right">
-        <DropdownMenuRadioGroup value={ticket?.status} onValueChange={handleUpdateTicketStatus}>
-         {ticketStatusRadioGroupItems}
-        </DropdownMenuRadioGroup>
-        {deleteButton}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      {deleteDialog}
+      
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" side="right">
+          {ticketStatusRadioGroupItems}
+          <DropdownMenuSeparator />
+          {deleteButton}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }
 

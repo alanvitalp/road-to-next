@@ -38,14 +38,6 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   )
 
-  const deleteButton = (
-    <form action={deleteTicket.bind(null, ticket.id)}>
-      <Button variant="outline" size="icon">
-        <LucideTrash className="w-4 h-4" />
-      </Button>
-    </form>
-  )
-
   const moreMenu = (
     <TicketMoreMenu 
       ticket={ticket} 
@@ -88,7 +80,6 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         {isDetail ? (
           <>
             {editButton}
-            {deleteButton}
             {moreMenu}
           </>
         ) : (
