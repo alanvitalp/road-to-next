@@ -14,7 +14,7 @@ export const EMPTY_ACTION_STATE: ActionState = {
   timestamp: Date.now()
 }
 
-export const fromErrorToActionState = (error: unknown, formData: FormData): ActionState => {
+export const fromErrorToActionState = (error: unknown, formData?: FormData): ActionState => {
   if (error instanceof ZodError) {
     return {
       status: "ERROR",
