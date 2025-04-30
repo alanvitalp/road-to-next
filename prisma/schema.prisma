@@ -35,8 +35,8 @@ model Ticket {
   status    TicketStatus @default(OPEN)
   deadline  String
   bounty    Int
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
