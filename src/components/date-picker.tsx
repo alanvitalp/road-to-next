@@ -47,10 +47,10 @@ const DatePicker = ({ id, name, defaultValue, imperativeHandleRef }: DatePickerP
         >
           <LucideCalendar className="w-4 h-4 mr-2" />
           {formattedStringDate}
+          <input type="hidden" name={name} value={formattedStringDate} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-      <input type="hidden" name={name} value={formattedStringDate} />
         <Calendar
           mode="single"
           selected={date}

@@ -3,7 +3,7 @@
 import { Ticket } from "@prisma/client"
 import { Label } from "@radix-ui/react-label"
 import { useActionState, useRef } from "react"
-import { DatePicker } from "@/components/date-picker"
+import { DatePicker, ImperativeHandleFromDatePicker } from "@/components/date-picker"
 import { FieldError } from "@/components/form/field-error"
 import { Form } from "@/components/form/form"
 import { SubmitButton } from "@/components/form/submit-button"
@@ -22,11 +22,12 @@ const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
     upsertTicket.bind(null, ticket?.id), EMPTY_ACTION_STATE
   )
 
-  const datePickerImperativeHandleRef = useRef<{ reset: () => void }>(null);
+  const datePickerImperativeHandleRef =
+  useRef<ImperativeHandleFromDatePicker>(null);
 
   const handleSuccess = () => {
     datePickerImperativeHandleRef.current?.reset();
-  }
+  };
 
   return (
     <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
@@ -46,14 +47,12 @@ const UpsertTicketForm = ({ ticket }: UpsertTicketFormProps) => {
           <DatePicker
             id="deadline"
             name="deadline"
-            defaultValue={
-              (actionState.payload?.get("deadline") as string) ??
-              ticket?.deadline
-            }
+            defaultValue={(actionState.payload?.get("deadline") as string) ?? ticket?.deadline}
             imperativeHandleRef={datePickerImperativeHandleRef}
           />
           <FieldError actionState={actionState} name="deadline" />
         </div>
+
         <div className="w-1/2">
           <Label htmlFor="bounty">Bounty ($)</Label>
           <Input
