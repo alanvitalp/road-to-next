@@ -18,7 +18,7 @@ const SignInPage = () => {
             </Link>
 
             <Link
-              className="text-sm text-muted-foreground"
+              className="text-sm text-muted-foreground ml-1"
               href={passwordForgotPath()}
             >
               Forgot Password?
