@@ -1,6 +1,5 @@
-import { Ticket } from "@prisma/client";
 import clsx from "clsx";
-import { LucideMoreVertical, LucidePencil, LucideSquareArrowOutUpRight, LucideTrash } from "lucide-react";
+import { LucideMoreVertical, LucidePencil, LucideSquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,12 +11,12 @@ import {
 } from "@/components/ui/card"
 import { editTicketPath, ticketPath } from "@/path";
 import { toCurrencyFromCent } from "@/utils/currency";
-import { deleteTicket } from "../actions/delete-ticket";
 import { TICKET_ICONS } from "../constants";
+import { TicketWithMetadata } from "../types";
 import { TicketMoreMenu } from "./ticket-more-menu";
 
 type TicketItemProps = {
-  ticket: Ticket;
+  ticket: TicketWithMetadata;
   isDetail?: boolean
 }
 
@@ -71,7 +70,9 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         </CardContent>
 
         <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{ticket.deadline}</p>
+          <p className="text-sm text-muted-foreground">
+            {ticket.deadline} by {ticket.user.username}
+          </p>
           <p className="text-sm text-muted-foreground">{toCurrencyFromCent(ticket.bounty)}</p>
         </CardFooter>
       </Card>
