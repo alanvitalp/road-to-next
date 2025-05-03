@@ -1,17 +1,18 @@
 "use client";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
-import { Ticket, TicketStatus } from "@prisma/client"
+import { TicketStatus } from "@prisma/client"
 import { LucideTrash } from "lucide-react"
 import React from "react"
-import { TICKET_STATUS_LABELS } from "../constants"
-import { updateTicketStatus } from "../actions/update-ticket-status"
 import { toast } from "sonner"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem,DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { deleteTicket } from "../actions/delete-ticket";
+import { updateTicketStatus } from "../actions/update-ticket-status"
+import { TICKET_STATUS_LABELS } from "../constants"
+import { TicketWithMetadata } from "../types";
 import { useConfirmDialog } from "./confirm-dialog";
 
 type TicketMoreMenuProps = {
-  ticket: Ticket
+  ticket: TicketWithMetadata
   trigger: React.ReactNode
 }
 
