@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { createSearchParamsCache, parseAsString } from "nuqs/server";
+import { createSearchParamsCache, parseAsInteger, parseAsString } from "nuqs/server";
 
 export type TicketWithMetadata = Prisma.TicketGetPayload<{
   include: {
@@ -23,9 +23,20 @@ export const sortParser = {
   sortValue: parseAsString.withDefault("desc"),
 };
 
+export const paginationParser = {
+  page: parseAsInteger.withDefault(0),
+  size: parseAsInteger.withDefault(5),
+};
+
+export const paginationOptions = {
+  shallow: false,
+  clearOnDefault: true,
+};
+
 export const searchParamsCache = createSearchParamsCache({
   search: searchParser,
   ...sortParser,
+  ...paginationParser,
 });
 
 export type ParsedSearchParams = Awaited<
