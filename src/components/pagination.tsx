@@ -1,5 +1,5 @@
-import { Select, SelectContent, SelectItem,SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import { Button } from "./ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type PageAndSize = {
   page: number;
