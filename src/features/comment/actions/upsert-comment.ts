@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { setCookieByKey } from "@/actions/cookies";
 import {
   ActionState,
   fromErrorToActionState,
@@ -62,7 +61,7 @@ export const upsertComment = async (
   revalidatePath(ticketPath(ticketId));
 
   if (commentId) {
-    await setCookieByKey("toast", "Comment updated");
+    return toActionState("SUCCESS", "Comment updated");
   }
 
   return toActionState("SUCCESS", "Comment created");

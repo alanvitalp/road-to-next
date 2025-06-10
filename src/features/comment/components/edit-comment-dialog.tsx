@@ -45,27 +45,27 @@ const useEditCommentDialog = ({
   const dialog = (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            {description}
-          </DialogDescription>
-        </DialogHeader>
+        <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {description}
+            </DialogDescription>
+          </DialogHeader>
 
-        <Textarea name="content" placeholder="What's on your mind ..." />
-        <FieldError actionState={actionState} name="content" />
+          <Textarea name="content" placeholder="What's on your mind ..." />
+          <FieldError actionState={actionState} name="content" />
 
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-          
-          <Form action={action} actionState={actionState} onSuccess={handleSuccess}>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
+
             <SubmitButton label="Save changes" />
-          </Form>
-        </DialogFooter>
+          </DialogFooter>
+        </Form>
       </DialogContent>
     </Dialog>
   )
