@@ -41,7 +41,6 @@ export const upsertTicket = async (id: string | undefined, _actionState: ActionS
         return toActionState("ERROR", "Not authorized");
       }
     }
-    console.log("batata", formData.get("deadline"))
 
     const data = upsertTicketSchema.parse({
       title: formData.get("title"),
