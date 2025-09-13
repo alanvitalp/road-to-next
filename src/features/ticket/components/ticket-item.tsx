@@ -12,6 +12,7 @@ import {
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
+import { CommentWithMetadata } from "@/features/comment/types";
 import { editTicketPath, ticketPath } from "@/path";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TICKET_ICONS } from "../constants";
@@ -21,9 +22,10 @@ import { TicketMoreMenu } from "./ticket-more-menu";
 type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean
+   comments?: CommentWithMetadata[];
 }
 
-const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail, comments }: TicketItemProps) => {
   const { user } = await getAuth();
   const isTicketOwner = isOwner(user, ticket);
 
@@ -97,12 +99,11 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
             {editButton}
             {detailButton}
           </>
-        )
-        }
+        )}
       </div>
     </div>
 
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+    {isDetail ? <Comments ticketId={ticket.id} comments={comments} /> : null}
     </div>
   )
 }
