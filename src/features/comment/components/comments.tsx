@@ -43,8 +43,10 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
     );
   }
 
-  const handleCreateComment = (newComment: CommentWithMetadata) => {
-    setComments((prevComments) => [newComment, ...prevComments]);
+  const handleCreateComment = (comment: CommentWithMetadata | undefined) => {
+    if (!comment) return;
+
+    setComments((prevComments) => [comment, ...prevComments]);
   };
 
   return (

@@ -1,12 +1,14 @@
 import { ZodError } from "zod"
 
-export type ActionState = { 
-  message: string, 
-  payload?: FormData, 
-  fieldErrors: Record<string, string[] | undefined> 
-  status?: 'SUCCESS' | "ERROR"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ActionState<T = any> = {
+  status?: "SUCCESS" | "ERROR";
+  message: string;
+  payload?: FormData;
+  fieldErrors: Record<string, string[] | undefined>;
   timestamp: number;
-}
+  data?: T;
+};
 
 export const EMPTY_ACTION_STATE: ActionState = {
   message: "",
@@ -14,7 +16,7 @@ export const EMPTY_ACTION_STATE: ActionState = {
   timestamp: Date.now()
 }
 
-export const fromErrorToActionState = (error: unknown, formData?: FormData): ActionState => {
+export const fromErrorToActionState = (error: unknown,  formData?: FormData): ActionState => {
   if (error instanceof ZodError) {
     return {
       status: "ERROR",
@@ -37,11 +39,11 @@ export const fromErrorToActionState = (error: unknown, formData?: FormData): Act
       message: "An unknown error occurred", 
       payload: formData,
       fieldErrors: {},
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
   }
 }
 
-export const toActionState = (status: ActionState['status'], message: string, formData?: FormData): ActionState => {
-  return { message, fieldErrors: {}, status, timestamp: Date.now(), payload: formData }
+export const toActionState = (status: ActionState['status'], message: string, formData?: FormData, data?: unknown): ActionState => {
+  return { message, fieldErrors: {}, status, timestamp: Date.now(), payload: formData, data }
 }
