@@ -61,8 +61,8 @@ export const upsertComment = async (
   revalidatePath(ticketPath(ticketId));
 
   if (commentId) {
-    return toActionState("SUCCESS", "Comment updated");
+    return toActionState("SUCCESS", "Comment updated", formData);
   }
 
-  return toActionState("SUCCESS", "Comment created");
+  return toActionState("SUCCESS", "Comment created", formData);
 };

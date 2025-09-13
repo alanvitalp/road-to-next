@@ -11,9 +11,10 @@ import { useEditCommentDialog } from "./edit-comment-dialog";
 type CommentEditButtonProps = {
   ticketId: string;
   comment: CommentWithMetadata;
+  onEditComment: (id: string, content: string) => void;
 };
 
-const CommentEditButton = ({ ticketId, comment }: CommentEditButtonProps) => {
+const CommentEditButton = ({ ticketId, comment, onEditComment }: CommentEditButtonProps) => {
   const [actionState, action] = useActionState(
     upsertComment.bind(null, ticketId, comment.id), EMPTY_ACTION_STATE,
   )
@@ -26,6 +27,7 @@ const CommentEditButton = ({ ticketId, comment }: CommentEditButtonProps) => {
         <LucidePencil className="w-4 h-4" />
       </Button>
     ),
+    onSuccess: (actionState) => onEditComment?.(comment.id, actionState.payload?.get("content") as string),
   });
 
   return (

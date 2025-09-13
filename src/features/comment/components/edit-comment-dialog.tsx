@@ -23,6 +23,7 @@ type UseConfirmDialogProps = {
   action: (payload: FormData) => void;
   trigger: React.ReactElement
   actionState: ActionState
+  onSuccess?: (actionState: ActionState) => void;
 }
 
 const useEditCommentDialog = ({
@@ -30,6 +31,7 @@ const useEditCommentDialog = ({
   actionState,
   trigger, 
   title = "Edit comment",
+  onSuccess,
   description = "Make changes to your comment here."
 }: UseConfirmDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -40,6 +42,7 @@ const useEditCommentDialog = ({
 
   const handleSuccess= () => {
     setIsOpen(false)
+    onSuccess?.(actionState);
   }
 
   const dialog = (
