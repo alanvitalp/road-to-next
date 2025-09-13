@@ -7,7 +7,7 @@ export type TicketWithMetadata = Prisma.TicketGetPayload<{
       select: { username: true };
     };
   };
-}>;
+}> & { isOwner: boolean };
 
 export const sortOptions = {
   shallow: false,
