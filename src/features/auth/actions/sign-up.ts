@@ -10,6 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/path";
 import { generateRandomToken } from "@/utils/crypto";
 import { setSessionCookie } from "../utils/session-cookie";
+import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 
 const signUpSchema = z
   .object({
@@ -50,10 +51,19 @@ const signUpSchema = z
           passwordHash,
         },
       });
+
+      const verificationCode = await generateEmailVerificationCode(
+        user.id,
+        email
+      );
+      console.log(verificationCode);
   
       const sessionToken = generateRandomToken();
       const session = await createSession(sessionToken, user.id);
       await setSessionCookie(sessionToken, session.expiresAt);
+
+   
+
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
