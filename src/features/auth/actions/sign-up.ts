@@ -11,6 +11,8 @@ import { ticketsPath } from "@/path";
 import { generateRandomToken } from "@/utils/crypto";
 import { setSessionCookie } from "../utils/session-cookie";
 import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
+import { sendEmailVerification } from "../emails/send-email-verification";
+import { inngest } from "@/lib/inngest";
 
 const signUpSchema = z
   .object({
@@ -52,11 +54,12 @@ const signUpSchema = z
         },
       });
 
-      const verificationCode = await generateEmailVerificationCode(
-        user.id,
-        email
-      );
-      console.log(verificationCode);
+      await inngest.send({
+        name: "app/auth.sign-up",
+        data: {
+          userId: user.id,
+        },
+      });
   
       const sessionToken = generateRandomToken();
       const session = await createSession(sessionToken, user.id);
