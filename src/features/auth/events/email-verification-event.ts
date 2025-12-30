@@ -2,6 +2,7 @@ import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { sendEmailVerification } from "../emails/send-email-verification";
 import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
+import { checkEmailVerificationRateLimit } from "../utils/check-email-verification-rate-limit";
 
 export type EmailVerificationEventArgs = {
   data: {
@@ -18,6 +19,17 @@ export const emailVerificationEvent = inngest.createFunction(
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: userId },
     });
+
+    const rateLimit = await checkEmailVerificationRateLimit(user.id);
+
+    if (!rateLimit.allowed) {
+      // Silently skip sending if rate limited (user just signed up, so this is unlikely)
+      // But we still want to prevent abuse
+      return {
+        event,
+        body: { skipped: true, reason: "rate_limited" },
+      };
+    }
 
     const verificationCode = await generateEmailVerificationCode(
       user.id,
