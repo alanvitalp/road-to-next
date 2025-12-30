@@ -17,6 +17,19 @@ model User {
   passwordResetTokens PasswordResetToken[]
   sessions            Session[]
   tickets             Ticket[]
+  emailVerified       Boolean              @default(false)
+  emailVerificationTokens EmailVerificationToken[]
+}
+
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  code      String
+  expiresAt DateTime
+  email     String
+  userId    String
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  @@index([userId])
 }
 
 model Session {
