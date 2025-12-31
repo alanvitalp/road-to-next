@@ -8,6 +8,6 @@ type Events = {
 };
 
 export const inngest = new Inngest({
-    id: "the-road-to-next",
+    id: "alan-road-to-next",
     schemas: new EventSchemas().fromRecord<Events>(),
 });
