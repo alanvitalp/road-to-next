@@ -72,7 +72,7 @@ const EmailPasswordReset = ({ toName, url }: EmailPasswordResetProps) => {
               {/* Footer */}
               <Section>
                 <Text className="text-xs text-gray-500 m-0 mb-2">
-                  If you didn't request this password reset, you can safely
+                  If you didn&apos;t request this password reset, you can safely
                   ignore this email.
                 </Text>
                 <Text className="text-xs text-gray-400 m-0">

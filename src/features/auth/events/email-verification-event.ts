@@ -1,8 +1,8 @@
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { sendEmailVerification } from "../emails/send-email-verification";
-import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 import { checkEmailVerificationRateLimit } from "../utils/check-email-verification-rate-limit";
+import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 
 export type EmailVerificationEventArgs = {
   data: {

@@ -5,12 +5,12 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ActionState, fromErrorToActionState, toActionState } from "@/components/form/utils/to-action-state";
 import { hashPassword } from "@/features/password/utils/hash-and-verify";
+import { inngest } from "@/lib/inngest";
 import { createSession } from "@/lib/oslo";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/path";
 import { generateRandomToken } from "@/utils/crypto";
 import { setSessionCookie } from "../utils/session-cookie";
-import { inngest } from "@/lib/inngest";
 
 const signUpSchema = z
   .object({

@@ -6,8 +6,8 @@ import {
 } from "@/components/form/utils/to-action-state";
 import { sendEmailVerification } from "../emails/send-email-verification";
 import { getAuthOrRedirect } from "../queries/get-auth-or-redirect";
-import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 import { checkEmailVerificationRateLimit } from "../utils/check-email-verification-rate-limit";
+import { generateEmailVerificationCode } from "../utils/generate-email-verification-code";
 
 export const emailVerificationResend = async () => {
   const { user } = await getAuthOrRedirect({

@@ -1,10 +1,10 @@
+import type { RandomReader } from "@oslojs/crypto/random";
+import { generateRandomString } from "@oslojs/crypto/random";
 import { sha256 } from "@oslojs/crypto/sha2";
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding";
-import type { RandomReader } from "@oslojs/crypto/random";
-import { generateRandomString } from "@oslojs/crypto/random";
 
 export const generateRandomToken = () => {
   const bytes = new Uint8Array(20);
