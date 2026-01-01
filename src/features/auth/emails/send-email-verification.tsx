@@ -10,7 +10,7 @@ export const sendEmailVerification = async (
   return await resend.emails.send({
     // your own custom domain here
     // or your email that you used to sign up at Resend
-    from: "no-reply@alanvital18@gmail.com",
+    from: "alan.road-to-next.com",
     to: email,
     subject: "Email Verification from TicketBounty",
     react: <EmailVerification toName={username} code={verificationCode} />,
