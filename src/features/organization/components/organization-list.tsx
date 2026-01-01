@@ -1,16 +1,24 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { getOrganizationsByUser } from "../queries/get-organization-by-users";
+import { format } from "date-fns";
 
 
 const OrganizationList = async () => {
-  const { user } = await getAuth();
-  const organizations = await getOrganizationsByUser(user?.id);
+  const organizations = await getOrganizationsByUser()
 
   return (
     <div className="animate-fade-from-top">
       {organizations.map((organization) => (
         <div key={organization.id}>
           <div>Name: {organization.name}</div>
+          <div>
+            Joined At:{" "}
+            {format(
+              organization.membershipByUser.joinedAt,
+              "yyyy-MM-dd, HH:mm"
+            )}
+          </div>
+          <div>Members: {organization._count.memberships}</div>
         </div>
       ))}
     </div>
