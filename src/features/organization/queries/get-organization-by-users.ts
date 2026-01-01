@@ -28,6 +28,7 @@ export const getOrganizationsByUser = async () => {
         },
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 
   return organizations.map(({ memberships, ...organization }) => ({

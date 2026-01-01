@@ -23,7 +23,7 @@ model Membership {
   userId         String
   isActive Boolean
   joinedAt DateTime @default(now())
-  @@id([organizationId, userId])
+  @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
   @@index([userId])
 }
