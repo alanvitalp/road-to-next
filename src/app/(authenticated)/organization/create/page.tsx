@@ -1,12 +1,14 @@
 import { CardCompact } from "@/components/card-compact";
 import { OrganizationCreateForm } from "@/features/organization/components/create-organization-form";
 
-const OnboardingPage = () => {
+
+
+const OrganizationCreatePage = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center">
       <CardCompact
         title="Create Organization"
-        description="Create an organization to get started"
+        description="Create a new organization for your team"
         className="w-full max-w-[420px] animate-fade-from-top"
         content={<OrganizationCreateForm />}
       />
@@ -14,4 +16,4 @@ const OnboardingPage = () => {
   );
 };
 
-export default OnboardingPage;
+export default OrganizationCreatePage;

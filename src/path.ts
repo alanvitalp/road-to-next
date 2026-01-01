@@ -15,4 +15,6 @@ export const accountPasswordPath = () => "/account/password";
 export const emailVerificationPath = () => "/email-verification";
 
 export const organizationsPath = () => "/organization";
+export const organizationCreatePath = () => "/organization/create";
+
 export const onboardingPath = () => "/onboarding";
