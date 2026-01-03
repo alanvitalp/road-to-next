@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getOrganizationsByUser } from "@/features/organization/queries/get-organization-by-users";
 import {
   emailVerificationPath,
   onboardingPath,
@@ -6,7 +7,6 @@ import {
   signInPath,
 } from "@/path";
 import { getAuth } from "./get-auth";
-import { getOrganizationsByUser } from "@/features/organization/queries/get-organization-by-users";
 
 type GetAuthOrRedirectOptions = {
   checkEmailVerified?: boolean;
