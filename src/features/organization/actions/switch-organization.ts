@@ -10,44 +10,46 @@ import { prisma } from "@/lib/prisma";
 import { organizationsPath } from "@/path";
 import { getOrganizationsByUser } from "../queries/get-organization-by-users";
 
-
 export const switchOrganization = async (organizationId: string) => {
-  const { user } = await getAuthOrRedirect();
+  const { user } = await getAuthOrRedirect({
+    checkActiveOrganization: false,
+  });
 
   try {
     const organizations = await getOrganizationsByUser();
 
     const canSwitch = organizations.some(
-      (organization) => organization.id === organizationId
+      (organization) => organization.id === organizationId,
     );
 
     if (!canSwitch) {
       return toActionState("ERROR", "Not a member of this organization");
     }
 
-    await prisma.membership.updateMany({
-      where: {
-        userId: user.id,
-        organizationId: {
-          not: organizationId,
-        },
-      },
-      data: {
-        isActive: false,
-      },
-    });
-
-    await prisma.membership.update({
-      where: {
-        membershipId: {
+    await prisma.$transaction([
+      prisma.membership.updateMany({
+        where: {
           userId: user.id,
-          organizationId,
+          organizationId: {
+            not: organizationId,
+          },
         },
-      },
-      data: {
-        isActive: true,
-      },
-    });
+        data: {
+          isActive: false,
+        },
+      }),
+      prisma.membership.update({
+        where: {
+          membershipId: {
+            userId: user.id,
+            organizationId,
+          },
+        },
+        data: {
+          isActive: true,
+        },
+      }),
+    ]);
   } catch (error) {
     return fromErrorToActionState(error);
   }

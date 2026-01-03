@@ -17,10 +17,11 @@ const createOrganizationSchema = z.object({
 
 export const createOrganization = async (
   _actionState: ActionState,
-  formData: FormData
+  formData: FormData,
 ) => {
   const { user } = await getAuthOrRedirect({
     checkOrganization: false,
+    checkActiveOrganization: false,
   });
 
   try {
@@ -28,17 +29,27 @@ export const createOrganization = async (
       name: formData.get("name"),
     });
 
-    await prisma.organization.create({
-      data: {
-        ...data,
-        memberships: {
-          create: {
-            userId: user.id,
-            isActive: false,
+    await prisma.$transaction([
+      prisma.membership.updateMany({
+        where: {
+          userId: user.id,
+        },
+        data: {
+          isActive: false,
+        },
+      }),
+      prisma.organization.create({
+        data: {
+          ...data,
+          memberships: {
+            create: {
+              userId: user.id,
+              isActive: true,
+            },
           },
         },
-      },
-    });
+      }),
+    ]);
   } catch (error) {
     return fromErrorToActionState(error);
   }

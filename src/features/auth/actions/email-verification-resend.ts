@@ -13,6 +13,7 @@ export const emailVerificationResend = async () => {
   const { user } = await getAuthOrRedirect({
     checkEmailVerified: false,
     checkOrganization: false,
+    checkActiveOrganization: false,
   });
 
   try {
@@ -21,19 +22,19 @@ export const emailVerificationResend = async () => {
     if (!rateLimit.allowed) {
       return toActionState(
         "ERROR",
-        `Please wait ${rateLimit.retryAfterSeconds} seconds before requesting another verification email`
+        `Please wait ${rateLimit.retryAfterSeconds} seconds before requesting another verification email`,
       );
     }
 
     const verificationCode = await generateEmailVerificationCode(
       user.id,
-      user.email
+      user.email,
     );
 
     const result = await sendEmailVerification(
       user.username,
       user.email,
-      verificationCode
+      verificationCode,
     );
 
     if (result.error) {

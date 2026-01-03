@@ -22,11 +22,12 @@ const emailVerificationSchema = z.object({
 
 export const emailVerification = async (
   _actionState: ActionState,
-  formData: FormData
+  formData: FormData,
 ) => {
   const { user } = await getAuthOrRedirect({
     checkEmailVerified: false,
     checkOrganization: false,
+    checkActiveOrganization: false,
   });
 
   try {
@@ -37,7 +38,7 @@ export const emailVerification = async (
     const validCode = await validateEmailVerificationCode(
       user.id,
       user.email,
-      code
+      code,
     );
 
     if (!validCode) {
