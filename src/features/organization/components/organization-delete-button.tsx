@@ -1,10 +1,10 @@
 "use client";
 
 import { LucideLoaderCircle, LucideTrash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useConfirmDialog } from "@/features/ticket/components/confirm-dialog";
 import { deleteOrganization } from "../actions/delete-organization";
-import { useRouter } from "next/navigation";
 
 type OrganizationDeleteButtonProps = {
   organizationId: string;

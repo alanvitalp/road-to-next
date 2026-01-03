@@ -9,6 +9,9 @@ export const signInPath = () => "/sign-in";
 export const passwordForgotPath = () => "/password-forgot";
 export const passwordResetPath = () => "/password-reset";
 
+export const membershipsPath = (organizationId: string) =>
+  `/organization/${organizationId}/memberships`;
+
 export const accountProfilePath = () => "/account/profile";
 export const accountPasswordPath = () => "/account/password";
 

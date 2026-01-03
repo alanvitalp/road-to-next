@@ -1,13 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
-import { organizationsPath } from "@/path";
 import { getOrganizationsByUser } from "../queries/get-organization-by-users";
 
 export const deleteOrganization = async (organizationId: string) => {
