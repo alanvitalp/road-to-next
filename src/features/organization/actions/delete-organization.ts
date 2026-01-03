@@ -33,7 +33,5 @@ export const deleteOrganization = async (organizationId: string) => {
     return fromErrorToActionState(error);
   }
 
-  revalidatePath(organizationsPath());
-
   return toActionState("SUCCESS", "Organization deleted");
 };
