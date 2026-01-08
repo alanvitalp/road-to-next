@@ -11,6 +11,7 @@ import {
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
+import { MembershipRoleButton } from "./membership-role-button";
 
 type MembershipListProps = {
   organizationId: string;
@@ -19,6 +20,12 @@ type MembershipListProps = {
 const MembershipList = async ({ organizationId }: MembershipListProps) => {
   const auth = await getAuthOrRedirect();
   const memberships = await getMemberships(organizationId);
+
+  // Check if current user is an admin
+  const currentUserMembership = memberships.find(
+    (m) => m.userId === auth.user.id,
+  );
+  const isCurrentUserAdmin = currentUserMembership?.membershipRole === "ADMIN";
 
   return (
     <Table>
@@ -34,6 +41,19 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
       </TableHeader>
       <TableBody>
         {memberships.map((membership) => {
+          const isCurrentUser = membership.userId === auth.user.id;
+
+          const roleButton = (
+            <MembershipRoleButton
+              userId={membership.userId}
+              organizationId={membership.organizationId}
+              currentRole={membership.membershipRole}
+              isCurrentUser={isCurrentUser}
+              isCurrentUserAdmin={isCurrentUserAdmin}
+              username={membership.user.username}
+            />
+          );
+
           const deleteButton = (
             <MembershipDeleteButton
               organizationId={membership.organizationId}
@@ -59,7 +79,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
                 )}
               </TableCell>
 
-              <TableCell>{membership.membershipRole}</TableCell>
+              <TableCell>{roleButton}</TableCell>
 
               <TableCell className="flex justify-end gap-x-2">
                 {buttons}
