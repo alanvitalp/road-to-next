@@ -74,7 +74,7 @@ const MembershipRoleButton = ({
         {isLoading ? (
           <div className="flex items-center gap-x-2">
             <LucideLoaderCircle className="h-4 w-4 animate-spin" />
-            <span>Updating...</span>
+            <span>Updating</span>
           </div>
         ) : (
           <SelectValue />
