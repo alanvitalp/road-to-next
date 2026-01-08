@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { LucideBan, LucideCheck } from "lucide-react";
 import {
   Table,
@@ -8,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
-import { getMemberships } from "../queries/get-membership";
+import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
 
 type MembershipListProps = {
@@ -25,7 +26,9 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
         <TableRow>
           <TableHead>Username</TableHead>
           <TableHead>Email</TableHead>
+          <TableHead>Joined At</TableHead>
           <TableHead>Verified Email</TableHead>
+          <TableHead>Role</TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -46,12 +49,18 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
               <TableCell>{membership.user.username}</TableCell>
               <TableCell>{membership.user.email}</TableCell>
               <TableCell>
+                {format(membership.joinedAt, "yyyy-MM-dd, HH:mm")}
+              </TableCell>
+              <TableCell>
                 {membership.user.emailVerified ? (
                   <LucideCheck />
                 ) : (
                   <LucideBan />
                 )}
               </TableCell>
+
+              <TableCell>{membership.membershipRole}</TableCell>
+
               <TableCell className="flex justify-end gap-x-2">
                 {buttons}
               </TableCell>

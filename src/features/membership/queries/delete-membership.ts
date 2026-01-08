@@ -3,7 +3,7 @@
 import { toActionState } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
-import { getMemberships } from "./get-membership";
+import { getMemberships } from "./get-memberships";
 
 export const deleteMembership = async ({
   userId,

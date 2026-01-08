@@ -55,7 +55,7 @@ const seed = async () => {
   await prisma.organization.deleteMany();
   await prisma.membership.deleteMany();
 
-  const passwordHash = await hash("geheimnis");
+  const passwordHash = await hash("password");
 
   const dbUsers = await prisma.user.createManyAndReturn({
     data: users.map((user) => ({
@@ -76,11 +76,13 @@ const seed = async () => {
         userId: dbUsers[0].id,
         organizationId: dbOrganization.id,
         isActive: true,
+        membershipRole: "ADMIN",
       },
       {
         userId: dbUsers[1].id,
         organizationId: dbOrganization.id,
         isActive: false,
+        membershipRole: "MEMBER",
       },
     ],
   });

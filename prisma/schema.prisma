@@ -21,27 +21,34 @@ model Membership {
   organizationId String
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
-  isActive Boolean
-  joinedAt DateTime @default(now())
+
+  joinedAt       DateTime       @default(now())
+  isActive       Boolean
+  membershipRole MembershipRole @default(MEMBER)
+
   @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
   @@index([userId])
 }
 
-model User {
-  id                  String               @id @default(cuid())
-  username            String               @unique
-  email               String               @unique
-  passwordHash        String
-  comments            Comment[]
-  memberships             Membership[]
-  passwordResetTokens PasswordResetToken[]
-  sessions            Session[]
-  tickets             Ticket[]
-  emailVerified       Boolean              @default(false)
-  emailVerificationTokens EmailVerificationToken[]
+enum MembershipRole {
+  ADMIN
+  MEMBER
 }
 
+model User {
+  id                      String                   @id @default(cuid())
+  username                String                   @unique
+  email                   String                   @unique
+  passwordHash            String
+  comments                Comment[]
+  memberships             Membership[]
+  passwordResetTokens     PasswordResetToken[]
+  sessions                Session[]
+  tickets                 Ticket[]
+  emailVerified           Boolean                  @default(false)
+  emailVerificationTokens EmailVerificationToken[]
+}
 
 model EmailVerificationToken {
   id        String   @id @default(cuid())
@@ -51,6 +58,7 @@ model EmailVerificationToken {
   email     String
   userId    String
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
   @@index([userId])
 }
 
