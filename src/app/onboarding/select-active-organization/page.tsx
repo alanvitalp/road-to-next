@@ -5,11 +5,13 @@ import { Suspense } from "react";
 import { Heading } from "@/components/heading";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { OrganizationList } from "@/features/organization/components/organization-list";
 import { getOrganizationsByUser } from "@/features/organization/queries/get-organization-by-users";
 import { onboardingPath, organizationsPath } from "@/path";
 
 const SelectActiveOrganizationPage = async () => {
+  const { user } = await getAuth();
   const organizations = await getOrganizationsByUser();
 
   const hasActive = organizations.some((organization) => {
@@ -36,7 +38,7 @@ const SelectActiveOrganizationPage = async () => {
       />
 
       <Suspense fallback={<Spinner />}>
-        <OrganizationList limitedAccess />
+        <OrganizationList limitedAccess userId={user?.id} />
       </Suspense>
     </div>
   );

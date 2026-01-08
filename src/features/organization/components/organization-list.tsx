@@ -15,17 +15,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { MembershipDeleteButton } from "@/features/membership/components/membership-delete-button";
 import { membershipsPath } from "@/path";
 import { getOrganizationsByUser } from "../queries/get-organization-by-users";
 import { OrganizationDeleteButton } from "./organization-delete-button";
 import { OrganizationSwitchButton } from "./organization-switch-button";
-import { MembershipDeleteButton } from "@/features/membership/components/membership-delete-button";
 
 type OrganizationListProps = {
   limitedAccess?: boolean;
+  userId?: string;
 };
 
-const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
+const OrganizationList = async ({
+  userId,
+  limitedAccess,
+}: OrganizationListProps) => {
   const organizations = await getOrganizationsByUser();
 
   const hasActive = organizations.some((organization) => {
@@ -76,6 +80,7 @@ const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
             <MembershipDeleteButton
               organizationId={organization.id}
               userId={organization.membershipByUser.userId}
+              currentUserId={userId}
             />
           );
 

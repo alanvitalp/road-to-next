@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { getMemberships } from "../queries/get-membership";
 import { MembershipDeleteButton } from "./membership-delete-button";
 
@@ -15,6 +16,7 @@ type MembershipListProps = {
 };
 
 const MembershipList = async ({ organizationId }: MembershipListProps) => {
+  const auth = await getAuthOrRedirect();
   const memberships = await getMemberships(organizationId);
 
   return (
@@ -33,6 +35,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             <MembershipDeleteButton
               organizationId={membership.organizationId}
               userId={membership.userId}
+              currentUserId={auth.user.id}
             />
           );
 
