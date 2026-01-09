@@ -11,6 +11,7 @@
     "type": "tsc --noEmit",
     "postinstall": "prisma generate",
     "prisma-seed": "tsx prisma/seed.ts",
+    "prisma-seed-roles": "tsx prisma/seed-roles.ts",
     "email": "email dev --dir src/emails",
     "test": "jest",
     "test:watch": "jest --watch",
