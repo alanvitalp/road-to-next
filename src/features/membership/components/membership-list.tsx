@@ -71,12 +71,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             />
           );
 
-          const buttons = (
-            <>
-              {canManageMembers && permissionsButton}
-              {deleteButton}
-            </>
-          );
+          const buttons = <>{deleteButton}</>;
 
           return (
             <TableRow key={membership.userId}>

@@ -5,6 +5,7 @@ import { Heading } from "@/components/heading";
 import { NavigationTabs } from "@/components/navigation-tabs";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
+import { InvitationCreateButton } from "@/features/invitations/components/invitation-create-button";
 import { MembershipList } from "@/features/membership/components/membership-list";
 import { getOrganization } from "@/features/organization/queries/get-organization";
 import { invitationsPath, membershipsPath, rolesPath } from "@/path";
@@ -45,12 +46,15 @@ const MembershipsPage = async ({ params }: MembershipsPageProps) => {
           />
         }
         actions={
-          <Button asChild>
-            <Link href={rolesPath(organizationId)}>
-              <LucideShieldCheck className="w-4 h-4 mr-2" />
-              Manage Roles
-            </Link>
-          </Button>
+          <>
+            <InvitationCreateButton organizationId={organizationId} />
+            <Button asChild>
+              <Link href={rolesPath(organizationId)}>
+                <LucideShieldCheck className="w-4 h-4 mr-2" />
+                Manage Roles
+              </Link>
+            </Button>
+          </>
         }
       />
 
