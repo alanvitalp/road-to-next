@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import {
-  ActionState,
+  type ActionState,
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
@@ -18,15 +18,14 @@ const createCommentSchema = z.object({
 export const createComment = async (
   ticketId: string,
   _actionState: ActionState,
-  formData: FormData
+  formData: FormData,
 ) => {
-  let comment;
   const { user } = await getAuthOrRedirect();
 
   try {
     const data = createCommentSchema.parse(Object.fromEntries(formData));
 
-    comment = await prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: {
         userId: user.id,
         ticketId: ticketId,
@@ -36,14 +35,14 @@ export const createComment = async (
         user: true,
       },
     });
+
+    revalidatePath(ticketPath(ticketId));
+
+    return toActionState("SUCCESS", "Comment created", undefined, {
+      ...comment,
+      isOwner: true,
+    });
   } catch (error) {
     return fromErrorToActionState(error);
   }
-
-  revalidatePath(ticketPath(ticketId));
-
-  return toActionState("SUCCESS", "Comment created", undefined, {
-    ...comment,
-    isOwner: true,
-  });
 };

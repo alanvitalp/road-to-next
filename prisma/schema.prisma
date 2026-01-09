@@ -15,6 +15,7 @@ model Organization {
   name        String
   memberships Membership[]
   tickets     Ticket[]
+  roles       Role[]
 }
 
 model Membership {
@@ -23,20 +24,61 @@ model Membership {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
 
-  joinedAt       DateTime       @default(now())
-  isActive       Boolean
-  membershipRole MembershipRole @default(MEMBER)
+  joinedAt DateTime @default(now())
+  isActive Boolean
+  roleId   String?
+  role     Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
 
   canDeleteTicket Boolean @default(true)
 
   @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
   @@index([userId])
+  @@index([roleId])
 }
 
-enum MembershipRole {
-  ADMIN
-  MEMBER
+model Role {
+  id             String           @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  permissions    RolePermission[]
+  memberships    Membership[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Permission {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  key            String
+  value          Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId, key])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([key])
+}
+
+model RolePermission {
+  id        String   @id @default(cuid())
+  roleId    String
+  key       String
+  value     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, key])
+  @@index([roleId])
 }
 
 model User {
@@ -51,6 +93,7 @@ model User {
   tickets                 Ticket[]
   emailVerified           Boolean                  @default(false)
   emailVerificationTokens EmailVerificationToken[]
+  permissions             Permission[]
 }
 
 model EmailVerificationToken {

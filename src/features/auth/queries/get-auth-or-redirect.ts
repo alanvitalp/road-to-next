@@ -1,4 +1,4 @@
-import { Organization } from "@prisma/client";
+import type { Organization } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { getOrganizationsByUser } from "@/features/organization/queries/get-organization-by-users";
 import {

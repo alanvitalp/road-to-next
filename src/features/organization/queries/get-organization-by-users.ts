@@ -21,6 +21,9 @@ export const getOrganizationsByUser = async () => {
         where: {
           userId: user.id,
         },
+        include: {
+          role: true,
+        },
       },
       _count: {
         select: {

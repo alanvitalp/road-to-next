@@ -2,9 +2,8 @@ import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
 import { prisma } from "@/lib/prisma";
-import type { ParsedSearchParams } from "../search-params";
-import { getActiveMembership } from "@/features/membership/queries/get-active-membership";
 import { getTicketPermissions } from "../permissions/queries/get-ticket-permissions";
+import type { ParsedSearchParams } from "../search-params";
 
 export const getTickets = async (
   userId: string | undefined,

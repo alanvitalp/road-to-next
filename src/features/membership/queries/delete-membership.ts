@@ -38,10 +38,10 @@ export const deleteMembership = async ({
   // Check if user is deleting last admin
 
   const adminMemberships = (memberships ?? []).filter(
-    (membership) => membership.membershipRole === "ADMIN",
+    (membership) => membership.role?.name === "Admin",
   );
 
-  const removesAdmin = targetMembership.membershipRole === "ADMIN";
+  const removesAdmin = targetMembership.role?.name === "Admin";
   const isLastAdmin = adminMemberships.length <= 1;
 
   if (removesAdmin && isLastAdmin) {
@@ -58,7 +58,7 @@ export const deleteMembership = async ({
   );
 
   const isMyself = user.id === userId;
-  const isAdmin = myMembership?.membershipRole === "ADMIN";
+  const isAdmin = myMembership?.role?.name === "Admin";
 
   if (!isMyself && !isAdmin) {
     return toActionState(

@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { PERMISSIONS } from "@/features/permission/constants";
+import { hasPermission } from "@/features/permission/utils/has-permission";
 import { getMembership } from "./get-membership";
 
 export const getAdminOrRedirect = async (organizationId: string) => {
@@ -14,7 +16,14 @@ export const getAdminOrRedirect = async (organizationId: string) => {
     redirect(notFound());
   }
 
-  if (membership.membershipRole !== "ADMIN") {
+  // Check if user has admin-level permissions
+  const canManage = await hasPermission(
+    auth.user.id,
+    organizationId,
+    PERMISSIONS.ORGANIZATION_MANAGE_MEMBERS,
+  );
+
+  if (!canManage) {
     redirect(notFound());
   }
 

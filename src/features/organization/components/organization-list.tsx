@@ -51,8 +51,7 @@ const OrganizationList = async ({
       <TableBody>
         {organizations.map((organization) => {
           const isActive = organization.membershipByUser.isActive;
-          const isAdmin =
-            organization.membershipByUser.membershipRole === "ADMIN";
+          const isAdmin = organization.membershipByUser.role?.name === "Admin";
 
           const switchButton = (
             <OrganizationSwitchButton
@@ -123,7 +122,7 @@ const OrganizationList = async ({
               </TableCell>
               <TableCell>{organization._count.memberships}</TableCell>
               <TableCell>
-                {organization.membershipByUser.membershipRole}
+                {organization.membershipByUser.role?.name || "No Role"}
               </TableCell>
               <TableCell className="flex justify-end gap-x-2">
                 {buttons}

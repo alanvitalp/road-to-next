@@ -18,6 +18,13 @@ export const getMemberships = async (organizationId: string) => {
           emailVerified: true,
         },
       },
+      role: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+        },
+      },
     },
   });
 };

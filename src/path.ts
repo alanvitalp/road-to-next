@@ -13,6 +13,12 @@ export const passwordResetPath = () => "/password-reset";
 export const membershipsPath = (organizationId: string) =>
   `/organization/${organizationId}/memberships`;
 
+export const rolesPath = (organizationId: string) =>
+  `/organization/${organizationId}/roles`;
+
+export const memberPermissionsPath = (organizationId: string, userId: string) =>
+  `/organization/${organizationId}/memberships/${userId}/permissions`;
+
 export const accountProfilePath = () => "/account/profile";
 export const accountPasswordPath = () => "/account/password";
 

@@ -1,8 +1,11 @@
-"use server"
+"use server";
 
 import { TicketStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { fromErrorToActionState, toActionState } from "@/components/form/utils/to-action-state";
+import {
+  fromErrorToActionState,
+  toActionState,
+} from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { prisma } from "@/lib/prisma";
@@ -28,13 +31,13 @@ export const updateTicketStatus = async (id: string, status: TicketStatus) => {
       },
       data: {
         status,
-      }
-    })
+      },
+    });
   } catch (err) {
-    fromErrorToActionState(err);
+    return fromErrorToActionState(err);
   }
 
   revalidatePath(ticketsPath());
 
-  return toActionState("SUCCESS", "Status updated")
+  return toActionState("SUCCESS", "Status updated");
 };

@@ -1,9 +1,8 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { prisma } from "@/lib/prisma";
-import type { TicketWithMetadata } from "../types";
-import { getActiveMembership } from "@/features/membership/queries/get-active-membership";
 import { getTicketPermissions } from "../permissions/queries/get-ticket-permissions";
+import type { TicketWithMetadata } from "../types";
 
 export const getTicket = async (
   id: string,

@@ -1,5 +1,7 @@
 import { format } from "date-fns";
-import { LucideBan, LucideCheck } from "lucide-react";
+import { LucideBan, LucideCheck, LucideShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,10 +11,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { PERMISSIONS } from "@/features/permission/constants";
+import { hasPermission } from "@/features/permission/utils/has-permission";
+import { memberPermissionsPath } from "@/path";
 import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
-import { MembershipRoleButton } from "./membership-role-button";
-import { PermissionToggleDropdown } from "./permission-toggle-dropdown";
 
 type MembershipListProps = {
   organizationId: string;
@@ -22,11 +25,12 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
   const auth = await getAuthOrRedirect();
   const memberships = await getMemberships(organizationId);
 
-  // Check if current user is an admin
-  const currentUserMembership = memberships.find(
-    (m) => m.userId === auth.user.id,
+  // Check if current user can manage members
+  const canManageMembers = await hasPermission(
+    auth.user.id,
+    organizationId,
+    PERMISSIONS.ORGANIZATION_MANAGE_MEMBERS,
   );
-  const isCurrentUserAdmin = currentUserMembership?.membershipRole === "ADMIN";
 
   return (
     <Table>
@@ -37,23 +41,26 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
           <TableHead>Joined At</TableHead>
           <TableHead>Verified Email</TableHead>
           <TableHead>Role</TableHead>
-          <TableHead>Can Delete Ticket?</TableHead>
+          <TableHead>Permissions</TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
         {memberships.map((membership) => {
-          const isCurrentUser = membership.userId === auth.user.id;
+          const roleName = membership.role?.name || "No Role";
 
-          const roleButton = (
-            <MembershipRoleButton
-              userId={membership.userId}
-              organizationId={membership.organizationId}
-              currentRole={membership.membershipRole}
-              isCurrentUser={isCurrentUser}
-              isCurrentUserAdmin={isCurrentUserAdmin}
-              username={membership.user.username}
-            />
+          const permissionsButton = (
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                href={memberPermissionsPath(
+                  membership.organizationId,
+                  membership.userId,
+                )}
+              >
+                <LucideShieldCheck className="w-4 h-4 mr-2" />
+                Manage
+              </Link>
+            </Button>
           );
 
           const deleteButton = (
@@ -64,7 +71,12 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             />
           );
 
-          const buttons = <>{deleteButton}</>;
+          const buttons = (
+            <>
+              {canManageMembers && permissionsButton}
+              {deleteButton}
+            </>
+          );
 
           return (
             <TableRow key={membership.userId}>
@@ -81,15 +93,16 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
                 )}
               </TableCell>
 
-              <TableCell>{roleButton}</TableCell>
+              <TableCell>
+                <span className="text-sm">{roleName}</span>
+              </TableCell>
 
               <TableCell>
-                <PermissionToggleDropdown
-                  userId={membership.userId}
-                  organizationId={membership.organizationId}
-                  permissionKey="canDeleteTicket"
-                  permissionValue={membership.canDeleteTicket}
-                />
+                {canManageMembers ? (
+                  permissionsButton
+                ) : (
+                  <span className="text-sm text-muted-foreground">—</span>
+                )}
               </TableCell>
 
               <TableCell className="flex justify-end gap-x-2">
