@@ -1,10 +1,10 @@
-import { SearchParams } from "nuqs/server";
+import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { Heading } from "@/components/heading";
 import { Spinner } from "@/components/spinner";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { TicketList } from "@/features/ticket/components/ticket-list";
-import { searchParamsCache } from "@/features/ticket/types";
+import { searchParamsCache } from "@/features/ticket/search-params";
 
 type HomePageProps = {
   searchParams: Promise<SearchParams>;
@@ -12,7 +12,7 @@ type HomePageProps = {
 
 const HomePage = async ({ searchParams }: HomePageProps) => {
   await getAuthOrRedirect();
-  
+
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -21,10 +21,12 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList searchParams={searchParamsCache.parse(await searchParams)} />
+        <TicketList
+          searchParams={searchParamsCache.parse(await searchParams)}
+        />
       </Suspense>
     </div>
   );
-}
+};
 
-export default HomePage
+export default HomePage;

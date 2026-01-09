@@ -1,3 +1,4 @@
+import { Organization } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { getOrganizationsByUser } from "@/features/organization/queries/get-organization-by-users";
 import {
@@ -22,6 +23,8 @@ export const getAuthOrRedirect = async (options?: GetAuthOrRedirectOptions) => {
   } = options ?? {};
   const auth = await getAuth();
 
+  let activeOrganization: Organization | undefined;
+
   if (!auth.user) {
     redirect(signInPath());
   }
@@ -37,14 +40,16 @@ export const getAuthOrRedirect = async (options?: GetAuthOrRedirectOptions) => {
       redirect(onboardingPath());
     }
 
-    const hasActive = organizations.some((organization) => {
+    activeOrganization = organizations.find((organization) => {
       return organization.membershipByUser.isActive;
     });
+
+    const hasActive = !!activeOrganization;
 
     if (checkActiveOrganization && !hasActive) {
       redirect(selectActiveOrganizationPath());
     }
   }
 
-  return auth;
+  return { ...auth, activeOrganization };
 };

@@ -1,13 +1,16 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
 import { prisma } from "@/lib/prisma";
-import { ParsedSearchParams } from "../types";
+import type { ParsedSearchParams } from "../search-params";
 
 export const getTickets = async (
   userId: string | undefined,
-  searchParams: ParsedSearchParams
+  byOrganization: boolean,
+  searchParams: ParsedSearchParams,
 ) => {
   const { user } = await getAuth();
+  const activeOrganization = await getActiveOrganization();
 
   const where = {
     userId,
@@ -15,12 +18,17 @@ export const getTickets = async (
       contains: searchParams.search,
       mode: "insensitive" as const,
     },
+    ...(byOrganization && activeOrganization
+      ? {
+          organizationId: activeOrganization.id,
+        }
+      : {}),
   };
-  
+
   const skip = searchParams.size * searchParams.page;
   const take = searchParams.size;
 
-  const [tickets, count] = await prisma.$transaction([
+  const [tickets, count, totalCount] = await prisma.$transaction([
     prisma.ticket.findMany({
       where,
       skip,
@@ -39,6 +47,9 @@ export const getTickets = async (
     prisma.ticket.count({
       where,
     }),
+    prisma.ticket.count({
+      where: { userId },
+    }),
   ]);
 
   return {
@@ -48,6 +59,7 @@ export const getTickets = async (
     })),
     metadata: {
       count,
+      totalCount,
       hasNextPage: count > skip + take,
     },
   };

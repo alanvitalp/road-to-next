@@ -1,6 +1,6 @@
 import { Placeholder } from "@/components/placeholder";
 import { getTickets } from "../queries/get-tickets";
-import { ParsedSearchParams } from "../types";
+import type { ParsedSearchParams } from "../search-params";
 import { TicketItem } from "./ticket-item";
 import { TicketPagination } from "./ticket-pagination";
 import { TicketSearchInput } from "./ticket-search-input";
@@ -9,13 +9,24 @@ import { TicketSortSelect } from "./ticket-sort-select";
 type TicketListProps = {
   userId?: string;
   searchParams: ParsedSearchParams;
+  byOrganization?: boolean;
 };
 
-const TicketList = async ({ userId, searchParams }: TicketListProps) => {
+const TicketList = async ({
+  userId,
+  searchParams,
+  byOrganization = false,
+}: TicketListProps) => {
   const { list: tickets, metadata: ticketMetadata } = await getTickets(
     userId,
-    searchParams
+    byOrganization,
+    searchParams,
   );
+
+  const showCount = userId && ticketMetadata.totalCount > 0;
+  const countLabel = showCount
+    ? `Showing ${ticketMetadata.count} of ${ticketMetadata.totalCount} tickets`
+    : null;
 
   return (
     <div className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
@@ -41,6 +52,10 @@ const TicketList = async ({ userId, searchParams }: TicketListProps) => {
           ]}
         />
       </div>
+
+      {countLabel && (
+        <p className="text-sm text-muted-foreground">{countLabel}</p>
+      )}
 
       {tickets.length ? (
         tickets.map((ticket) => <TicketItem key={ticket.id} ticket={ticket} />)
