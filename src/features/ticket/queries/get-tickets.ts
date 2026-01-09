@@ -3,6 +3,8 @@ import { isOwner } from "@/features/auth/utils/is-owner";
 import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
 import { prisma } from "@/lib/prisma";
 import type { ParsedSearchParams } from "../search-params";
+import { getActiveMembership } from "@/features/membership/queries/get-active-membership";
+import { getTicketPermissions } from "../permissions/queries/get-ticket-permissions";
 
 export const getTickets = async (
   userId: string | undefined,
@@ -52,10 +54,18 @@ export const getTickets = async (
     }),
   ]);
 
+  const permissions = await getTicketPermissions({
+    organizationId: activeOrganization?.id,
+    userId: user?.id,
+  });
+
   return {
     list: tickets.map((ticket) => ({
       ...ticket,
       isOwner: isOwner(user, ticket),
+      permissions: {
+        canDeleteTicket: isOwner(user, ticket) && permissions.canDeleteTicket,
+      },
     })),
     metadata: {
       count,
