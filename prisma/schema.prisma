@@ -16,6 +16,23 @@ model Organization {
   memberships Membership[]
   tickets     Ticket[]
   roles       Role[]
+  invitations Invitation[]
+}
+
+model Invitation {
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
+  tokenHash                String       @unique
+  email                    String
+  organization             Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId           String
+  invitedByUser            User?        @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+  invitedByUserId          String?
+  membership               Membership?  @relation(fields: [membershipOrganizationId, membershipUserId], references: [organizationId, userId])
+  membershipOrganizationId String?
+  membershipUserId         String?
+
+  @@index([organizationId])
 }
 
 model Membership {
@@ -29,7 +46,8 @@ model Membership {
   roleId   String?
   role     Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
 
-  canDeleteTicket Boolean @default(true)
+  canDeleteTicket Boolean      @default(true)
+  invitations     Invitation[]
 
   @@id(name: "membershipId", [organizationId, userId])
   @@index([organizationId])
@@ -85,14 +103,15 @@ model User {
   id                      String                   @id @default(cuid())
   username                String                   @unique
   email                   String                   @unique
-  passwordHash            String
-  comments                Comment[]
-  memberships             Membership[]
-  passwordResetTokens     PasswordResetToken[]
-  sessions                Session[]
-  tickets                 Ticket[]
   emailVerified           Boolean                  @default(false)
+  passwordHash            String
+  sessions                Session[]
+  passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  invitesByUser           Invitation[]
+  memberships             Membership[]
+  tickets                 Ticket[]
+  comments                Comment[]
   permissions             Permission[]
 }
 
