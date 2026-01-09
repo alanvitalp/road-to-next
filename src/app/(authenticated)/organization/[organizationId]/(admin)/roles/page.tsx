@@ -12,8 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getOrganization } from "@/features/organization/queries/get-organization";
 import { RoleDeleteButton } from "@/features/permission/components/role-delete-button";
 import { getOrganizationRoles } from "@/features/permission/queries/manage-permissions";
+import { OrganizationBreadcrumbs } from "../_navigation/tabs";
 
 type RolesPageProps = {
   params: Promise<{
@@ -23,12 +25,16 @@ type RolesPageProps = {
 
 const RolesPage = async ({ params }: RolesPageProps) => {
   const { organizationId } = await params;
+  const organization = await getOrganization(organizationId);
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
         title="Roles"
         description="Manage roles and permissions for your organization"
+        breadcrumbs={
+          <OrganizationBreadcrumbs organizationName={organization.name} />
+        }
       />
 
       <div className="flex justify-end">
