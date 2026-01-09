@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { emailInvitationPath } from "@/path";
+import { emailInvitationPath } from "@/paths";
 import { generateRandomToken, hashToken } from "@/utils/crypto";
 import { getBaseUrl } from "@/utils/url";
 
@@ -27,7 +27,7 @@ export const generateInvitationLink = async (
   });
 
   const pageUrl = getBaseUrl() + emailInvitationPath();
-  const emailInvitationLink = +`${pageUrl}/${tokenId}`;
+  const emailInvitationLink = pageUrl + `/${tokenId}`;
 
   return emailInvitationLink;
 };
