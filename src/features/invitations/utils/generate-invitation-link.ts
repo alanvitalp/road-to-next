@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { emailInvitationPath } from "@/paths";
+import { emailInvitationPath } from "@/path";
 import { generateRandomToken, hashToken } from "@/utils/crypto";
 import { getBaseUrl } from "@/utils/url";
 
