@@ -166,9 +166,25 @@ model Ticket {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   comments       Comment[]
+  attachments    Attachment[]
 
   @@index([userId])
   @@index([organizationId])
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
+
+model Attachment {
+  id       String @id @default(cuid())
+  name     String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId String
+
+  @@index([ticketId])
 }
 
 model Comment {
@@ -182,10 +198,4 @@ model Comment {
 
   @@index([ticketId])
   @@index([userId])
-}
-
-enum TicketStatus {
-  OPEN
-  IN_PROGRESS
-  DONE
 }

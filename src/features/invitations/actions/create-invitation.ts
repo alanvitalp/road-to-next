@@ -8,10 +8,10 @@ import {
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import { getAdminOrRedirect } from "@/features/membership/queries/get-admin-or-redirect";
+import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { invitationsPath } from "@/path";
 import { generateInvitationLink } from "../utils/generate-invitation-link";
-import { inngest } from "@/lib/inngest";
 
 const createInvitationSchema = z.object({
   email: z.string().min(1, { message: "Is required" }).max(191).email(),

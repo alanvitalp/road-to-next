@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getInvitations } from "../queries/get-invitations";
+import { InvitationDeleteButton } from "./invitation-delete-button";
 
 type InvitationListProps = {
   organizationId: string;
@@ -36,9 +37,7 @@ const InvitationList = async ({ organizationId }: InvitationListProps) => {
       <TableBody>
         {invitations.map((invitation) => {
           const deleteButton = (
-            <Button variant="destructive" size="icon">
-              <LucideTrash className="w-4 h-4" />
-            </Button>
+            <InvitationDeleteButton email={invitation.email} />
           );
 
           const buttons = <>{deleteButton}</>;

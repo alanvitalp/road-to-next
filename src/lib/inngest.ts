@@ -1,4 +1,5 @@
 import { EventSchemas, Inngest } from "inngest";
+import type { AttachmentDeleteEventArgs } from "@/features/attachment/events/event-attachment-delete";
 import type { EmailVerificationEventArgs } from "@/features/auth/events/email-verification-event";
 import type { InvitationCreateEventArgs } from "@/features/invitations/events/event-invitation-create";
 import type { PasswordResetEventArgs } from "@/features/password/events/event-password-reset";
@@ -7,6 +8,7 @@ type Events = {
   "app/password.password-reset": PasswordResetEventArgs;
   "app/auth.sign-up": EmailVerificationEventArgs;
   "app/invitation.created": InvitationCreateEventArgs;
+  "app/attachment.deleted": AttachmentDeleteEventArgs;
 };
 
 export const inngest = new Inngest({
