@@ -33,3 +33,6 @@ export const selectActiveOrganizationPath = () =>
 export const organizationCreatePath = () => "/organization/create";
 
 export const onboardingPath = () => "/onboarding";
+
+export const attachmentDownloadPath = (attachmentId: string) =>
+  `/api/aws/s3/attachments/${attachmentId}`;

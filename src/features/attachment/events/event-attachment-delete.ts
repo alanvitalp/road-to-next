@@ -20,15 +20,6 @@ export const attachmentDeletedEvent = inngest.createFunction(
     const { organizationId, ticketId, fileName, attachmentId } = event.data;
 
     try {
-      const attachment = await prisma.attachment.findUniqueOrThrow({
-        where: {
-          id: attachmentId,
-        },
-        include: {
-          ticket: true,
-        },
-      });
-
       await s3.send(
         new DeleteObjectCommand({
           Bucket: process.env.AWS_BUCKET_NAME,

@@ -1,5 +1,10 @@
 "use server";
 
+import {
+  DeleteObjectCommand,
+  type DeleteObjectCommandInput,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import {
@@ -9,13 +14,12 @@ import {
 } from "@/components/form/utils/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { s3 } from "@/lib/aws";
 import { prisma } from "@/lib/prisma";
 import { ticketPath } from "@/path";
 import { ACCEPTED, MAX_SIZE } from "../constants";
-import { sizeInMB } from "../utils/size";
-import { s3 } from "@/lib/aws";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { generateS3Key } from "../utils/generate-s3-key";
+import { sizeInMB } from "../utils/size";
 
 const createAttachmentsSchema = z.object({
   files: z
@@ -54,13 +58,16 @@ export const createAttachments = async (
     return toActionState("ERROR", "Not the owner of this ticket");
   }
 
+  const attachments = [];
+  const uploadedKeys: string[] = [];
+
   try {
     const { files } = createAttachmentsSchema.parse({
       files: formData.getAll("files"),
     });
 
     for (const file of files) {
-      const buffer = await Buffer.from(await file.arrayBuffer());
+      const buffer = Buffer.from(await file.arrayBuffer());
 
       const attachment = await prisma.attachment.create({
         data: {
@@ -69,21 +76,48 @@ export const createAttachments = async (
         },
       });
 
+      const key = generateS3Key({
+        organizationId: ticket.organizationId,
+        ticketId: ticket.id,
+        fileName: file.name,
+        attachmentId: attachment.id,
+      });
+
       await s3.send(
         new PutObjectCommand({
           Bucket: process.env.AWS_BUCKET_NAME,
-          Key: generateS3Key({
-            organizationId: ticket.organizationId,
-            ticketId: ticket.id,
-            fileName: file.name,
-            attachmentId: attachment.id,
-          }),
+          Key: key,
           Body: buffer,
           ContentType: file.type,
         }),
       );
+
+      attachments.push(attachment);
+      uploadedKeys.push(key);
     }
   } catch (error) {
+    // Rollback S3 uploads
+    await Promise.all(
+      uploadedKeys.map((key) =>
+        s3
+          .send(
+            new DeleteObjectCommand({ Key: key } as DeleteObjectCommandInput),
+          )
+          .catch(() => null),
+      ),
+    );
+
+    // Rollback DB entries
+    await Promise.all(
+      attachments.map((a) =>
+        prisma.attachment.delete({
+          where: {
+            id: a.id,
+          },
+        }),
+      ),
+    );
+
     return fromErrorToActionState(error);
   }
 
