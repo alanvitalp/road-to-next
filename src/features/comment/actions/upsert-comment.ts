@@ -20,7 +20,7 @@ export const upsertComment = async (
   ticketId: string,
   commentId: string,
   _actionState: ActionState,
-  formData: FormData
+  formData: FormData,
 ) => {
   const { user } = await getAuthOrRedirect();
 
@@ -28,7 +28,7 @@ export const upsertComment = async (
     if (commentId) {
       const comment = await prisma.comment.findUnique({
         where: {
-          id: commentId
+          id: commentId,
         },
       });
 
@@ -39,21 +39,21 @@ export const upsertComment = async (
 
     const data = upsertCommentSchema.parse({
       content: formData.get("content"),
-    })
-        
+    });
+
     const dbData = {
       ...data,
       userId: user.id,
-      ticketId
+      ticketId,
     };
 
     await prisma.comment.upsert({
       where: {
-        id: commentId || ""
+        id: commentId || "",
       },
       update: dbData,
       create: dbData,
-    })
+    });
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }

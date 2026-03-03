@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Button } from "@/components/ui/button";
 import { upsertComment } from "../actions/upsert-comment";
-import { CommentWithMetadata } from "../types";
+import type { CommentWithMetadata } from "../types";
 import { useEditCommentDialog } from "./edit-comment-dialog";
 
 type CommentEditButtonProps = {
@@ -14,10 +14,15 @@ type CommentEditButtonProps = {
   onEditComment: (id: string, content: string) => void;
 };
 
-const CommentEditButton = ({ ticketId, comment, onEditComment }: CommentEditButtonProps) => {
+const CommentEditButton = ({
+  ticketId,
+  comment,
+  onEditComment,
+}: CommentEditButtonProps) => {
   const [actionState, action] = useActionState(
-    upsertComment.bind(null, ticketId, comment.id), EMPTY_ACTION_STATE,
-  )
+    upsertComment.bind(null, ticketId, comment.id),
+    EMPTY_ACTION_STATE,
+  );
 
   const [editButton, editDialog] = useEditCommentDialog({
     action,
@@ -27,7 +32,11 @@ const CommentEditButton = ({ ticketId, comment, onEditComment }: CommentEditButt
         <LucidePencil className="w-4 h-4" />
       </Button>
     ),
-    onSuccess: (actionState) => onEditComment?.(comment.id, actionState.payload?.get("content") as string),
+    onSuccess: (actionState) =>
+      onEditComment?.(
+        comment.id,
+        actionState.payload?.get("content") as string,
+      ),
   });
 
   return (

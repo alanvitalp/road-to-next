@@ -1,3 +1,4 @@
+"use client";
 import { useActionState } from "react";
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
